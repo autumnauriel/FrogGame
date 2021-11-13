@@ -1,4 +1,4 @@
-import {UI} from "./UI.js"
+import {Main} from "./Main.js"
 
 let button = document.createElement('button')
 button.style = 'position: absolute; bottom: 0; right: 0; z-index: 1;'
@@ -11,7 +11,7 @@ export const settings = {
     "EEG"
   ],
   author: "Autumn Auriel",
-  description: "A staring contest (with yourself...)",
+  description: "Collect as many flies as you can!",
   categories: [
     "train"
   ],
@@ -34,7 +34,7 @@ export const settings = {
         },
         {
           name: "ui",
-          class: UI,
+          class: Main,
           params: {},
         },
         {
