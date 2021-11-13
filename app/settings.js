@@ -1,10 +1,5 @@
 import {Main} from "./Main.js"
 
-let button = document.createElement('button')
-button.style = 'position: absolute; bottom: 0; right: 0; z-index: 1;'
-button.innerHTML = 'Connect Device'
-document.body.insertAdjacentElement('beforebegin', button)
-
 export const settings = {
   name: "Derpy Frog",
   devices: [
@@ -12,8 +7,9 @@ export const settings = {
   ],
   author: "Autumn Auriel",
   description: "Collect as many flies as you can!",
+  instructions: "",
   categories: [
-    "train"
+    "play"
   ],
   graphs: [
     {
@@ -35,7 +31,6 @@ export const settings = {
         {
           name: "ui",
           class: Main,
-          params: {},
         },
         {
           name: "document",
@@ -60,7 +55,4 @@ export const settings = {
     }
   ],
   "version": "0.0.38",
-  "connect": {
-    toggle: button
-  }
 };

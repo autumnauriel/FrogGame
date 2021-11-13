@@ -14,18 +14,17 @@ export class Main {
             player: null,
 
             nFlies: 10,
-            flies: [],
+            flies: null,
 
             loaded: false,
             background: new Image(),
+            
+            done: false
         }
 
         this.props.background.src = './app/assets/background.jpg';
         this.props.background.onload = () => this.props.loaded = true
         this.props.ctx = this.props.canvas.getContext("2d");
-        this.props.player = new Player(this.props.canvas)
-
-        this.props.flies = Array.from({length: this.props.nFlies}, e => new Fly(this.props.canvas))
 
         // Port Definition
         this.ports = {
@@ -43,51 +42,83 @@ export class Main {
         }
 
         this.props.container.id = this.props.id
-        this.props.container.style = 'height:100%; width:100%; display: flex; align-items: center; justify-content: center; background: black;'
+        this.props.container.style = 'position: relative; height:100%; width:100%; display: flex; align-items: center; justify-content: center; background: black;'
         this.props.container.insertAdjacentElement('beforeend', this.props.canvas)
         this.props.container.onresize = this.responsive
-
     }
 
     init = () => {
+        this.done = false
+        this.props.player = new Player(this.props.canvas)
+        this.props.flies = Array.from({length: this.props.nFlies}, e => new Fly(this.props.canvas))
+
         this._animate()
         this.responsive()
     }
 
-    deinit = () => { }
+    deinit = () => { 
+        this.done = true
+        this.container.remove()
+    }
 
     responsive = () => {
         this.props.canvas.width = this.props.container.clientWidth
 	    this.props.canvas.height = this.props.container.clientHeight
+
+        if (this.props.player) this.props.player.responsive()
+        if (this.props.flies) this.props.flies.forEach(f => f.responsive())
     }
 
     _animate = () => {
 
-        // Clear Canvas
-        this.props.ctx.clearRect(0, 0, this.props.canvas.width, this.props.canvas.height);
+        if (!this.done){
+            // Clear Canvas
+            this.props.ctx.clearRect(0, 0, this.props.canvas.width, this.props.canvas.height);
 
-        // Draw Background
-        if (this.props.loaded) this.props.ctx.drawImage(this.props.background, 0, 0, this.props.canvas.width, this.props.canvas.height);
+            // Draw Background
+            if (this.props.loaded) this.props.ctx.drawImage(this.props.background, 0, 0, this.props.canvas.width, this.props.canvas.height);
 
-        // Update Objects
-        this.props.flies.forEach(r => r.update())
-        this.props.player.update()
+            // Update Objects
+            this.props.flies.forEach(r => r.update())
+            this.props.player.update()
 
-        // Check Player / Object Collisions
-        this.props.flies.forEach(r => this.props.player.checkCollision(r))
+            // Check Player / Object Collisions
+            this.props.flies.forEach(r => this.props.player.checkCollision(r))
 
-        // Draw Objects
-        this.props.flies.forEach(r => r.draw())
-        this.props.player.draw()
+            // Draw Objects
+            this.props.flies.forEach(r => r.draw())
+            this.props.player.draw()
 
-        // Check Endgame
-        if (this.props.player.flies >= this.props.fliesToCatch) {
-            // document.querySelector('#winmessage').style = 'block'
-            this.props.canvas.style.opacity = 0.3
+            // Check Endgame
+            if (!this.done && this.props.player.flies >= this.props.fliesToCatch) {
+                let message = document.createElement('div')
+                message.style = 'position: absolute; text-align: center; top: 50%; left: 50%; transform: translate(-50%,-50%);'
+                this.props.container.insertAdjacentElement('beforeend', message)
+
+                let text = document.createElement('h1')
+                text.innerHTML = 'You Won!'
+                message.insertAdjacentElement('beforeend', text)
+
+                let button = document.createElement('button')
+                button.innerHTML = 'Play Again'
+                button.onclick = () => {
+
+                    // reset everything
+                    message.remove()
+                    this.props.canvas.style.opacity = 1.0
+                    this.init()
+
+                }
+
+                message.insertAdjacentElement('beforeend', button)
+
+                this.props.canvas.style.opacity = 0.3
+                this.done = true
+            }
+
+            // Run Animation Again
+            setTimeout(this._animate, 1000/60)
         }
-
-        // Run Animation Again
-        setTimeout(this._animate, 1000/60)
 
     }
 }
@@ -101,7 +132,7 @@ class Player {
         this.canvas = canvas
         this.ctx = canvas.getContext("2d");
 
-        this.position = {x: 0, y: 0}
+        this.position = {x: 25, y: 0}
         this.width = 100
         this.height = 100
 
@@ -152,6 +183,7 @@ class Player {
             (fly.position.x - (this.position.x + this.width) < 0) // distance between fly and right side is less than zero
             && (fly.position.y - (this.position.y + this.height) < 0) // distance between fly and top is less than zero
             && (this.position.y - fly.position.y < 0) // distance between fly and bottom is less than zero
+            && (this.position.x - fly.position.x < 0) // distance between fly and left side is less than zero
         )
 
         if (collision) {
@@ -172,6 +204,8 @@ class Player {
         this.isJumping = true;
         
     }
+
+    responsive = () => {}
     
 }
 
@@ -190,6 +224,7 @@ class Fly{
         this.width = 10
         this.height = 10
         this.maxHeight = 200 - this.height
+        this.speed = 0; // set in responsive
 
         // Handle Image
         this.imageLoaded = false;
@@ -199,6 +234,7 @@ class Fly{
         //     this.imageLoaded = true
         // }
 
+        this.responsive()
         this.init()
     }
 
@@ -210,7 +246,7 @@ class Fly{
 
     update = () => {
 
-        this.relPos.x -= 0.01
+        this.relPos.x -= this.speed
         if (this.relPos.x < -this.width/this.canvas.width) this.init()
 
     }
@@ -234,5 +270,9 @@ class Fly{
             this.ctx.fillStyle = 'red'
             this.ctx.fill()        
         }
+    }
+
+    responsive = () => { 
+        this.speed = 7 / this.canvas.width
     }
 }
