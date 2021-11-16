@@ -221,8 +221,8 @@ class Fly{
         // Core Properties
         this.relPos = {x: null, y:null}
         this.position = {x: null, y:null}
-        this.width = 50
-        this.height = 50
+        this.width = 10
+        this.height = 10
         this.maxHeight = 200 - this.height
         this.speed = 0; // set in responsive
 
