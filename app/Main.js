@@ -229,10 +229,10 @@ class Fly{
         // Handle Image
         this.imageLoaded = false;
         this.image = new Image();
-        this.image.src = './app/assets/derp.png';
-        // this.image.onload = () => {
-        //     this.imageLoaded = true
-        // }
+        this.image.src = './app/assets/fly.PNG';
+        this.image.onload = () => {
+             this.imageLoaded = true
+         }
 
         this.responsive()
         this.init()
