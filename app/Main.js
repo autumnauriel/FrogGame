@@ -232,7 +232,7 @@ class Fly{
         this.image.src = './app/assets/fly.PNG';
         this.image.onload = () => {
              this.imageLoaded = true
-         }
+        }
 
         this.responsive()
         this.init()
@@ -262,14 +262,14 @@ class Fly{
         let y = (h - this.height) - this.relPos.y*this.maxHeight
 
         // Draw Image if Loaded
-        if (this.imageLoaded) this.ctx.drawImage(this.image, x, y, this.width, this.height);
+      /*  if (this.imageLoaded) this.ctx.drawImage(this.image, x, y, this.width, this.height);
         else {
             // Draw Rock Placeholder
             this.ctx.beginPath();
             this.ctx.rect(x, y, this.width, this.height);
             this.ctx.fillStyle = 'red'
             this.ctx.fill()        
-        }
+        } */
     }
 
     responsive = () => { 
