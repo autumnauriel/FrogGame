@@ -22,7 +22,7 @@ export class Main {
             done: false
         }
 
-        this.props.background.src = './app/assets/background.PNG';
+        this.props.background.src = './app/assets/background.jpg';
         this.props.background.onload = () => this.props.loaded = true
         this.props.ctx = this.props.canvas.getContext("2d");
 
@@ -229,10 +229,10 @@ class Fly{
         // Handle Image
         this.imageLoaded = false;
         this.image = new Image();
-        this.image.src = './app/assets/fly.PNG';
-        this.image.onload = () => {
-             this.imageLoaded = true
-        }
+        this.image.src = './app/assets/derp.png';
+        // this.image.onload = () => {
+        //     this.imageLoaded = true
+        // }
 
         this.responsive()
         this.init()
@@ -262,14 +262,14 @@ class Fly{
         let y = (h - this.height) - this.relPos.y*this.maxHeight
 
         // Draw Image if Loaded
-      /*  if (this.imageLoaded) this.ctx.drawImage(this.image, x, y, this.width, this.height);
+        if (this.imageLoaded) this.ctx.drawImage(this.image, x, y, this.width, this.height);
         else {
             // Draw Rock Placeholder
             this.ctx.beginPath();
             this.ctx.rect(x, y, this.width, this.height);
             this.ctx.fillStyle = 'red'
             this.ctx.fill()        
-        } */
+        }
     }
 
     responsive = () => { 
