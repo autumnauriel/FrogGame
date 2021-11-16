@@ -22,7 +22,7 @@ export class Main {
             done: false
         }
 
-        this.props.background.src = './app/assets/background.jpg';
+        this.props.background.src = './app/assets/background.PNG';
         this.props.background.onload = () => this.props.loaded = true
         this.props.ctx = this.props.canvas.getContext("2d");
 
